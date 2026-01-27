@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from orchestration.full_pipeline import run
+from orchestration.full_pipeline import run_full_pipeline
 import traceback
 
 router = APIRouter()
