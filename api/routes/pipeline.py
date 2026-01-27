@@ -7,7 +7,7 @@ router = APIRouter()
 @router.post("/pipeline/run")
 def run_pipeline():
     try:
-        run()
+        run_full_pipeline()
         return {"status": "pipeline executed successfully"}
     except Exception as e:
         print("PIPELINE ERROR:")
