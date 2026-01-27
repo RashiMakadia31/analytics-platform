@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from api.db import get_db
 import pandas as pd
+import traceback
 
 router = APIRouter()
 
@@ -9,15 +10,15 @@ router = APIRouter()
 def get_insights(db: Session = Depends(get_db)):
     try:
         df = pd.read_sql(
-            "SELECT * FROM executive_insights ORDER BY order_date DESC",
+            "SELECT order_date, insight, confidence FROM executive_insights ORDER BY order_date DESC",
             db.bind
         )
-    except Exception:
-        # DB/table exists but query failed
-        return []
+        return df.to_dict(orient="records")
 
-    if df.empty:
-        # THIS IS A VALID BUSINESS STATE
-        return []
-
-    return df.to_dict(orient="records")
+    except Exception as e:
+        print("INSIGHTS ERROR:")
+        traceback.print_exc()
+        return {
+            "error": "insights_failed",
+            "details": str(e)
+        }
