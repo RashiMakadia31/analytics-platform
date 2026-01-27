@@ -1,0 +1,7 @@
+orders_cleaned:
+  order_id: string
+  order_date: date
+  region: string
+  product_id: string
+  quantity: int
+  price: float
