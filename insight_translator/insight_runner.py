@@ -1,6 +1,5 @@
 import pandas as pd
 from db.connection import engine
-
 from insight_translator.change_detection import detect_change
 from insight_translator.driver_analysis import identify_driver
 from insight_translator.insight_generator import generate_insight
@@ -36,11 +35,15 @@ def run_insight_translation(health_score):
             "confidence": "high" if health_score >= 80 else "moderate"
         })
 
-    pd.DataFrame(insights).to_sql(
+    # 🔥 ALWAYS create table with correct columns
+    pd.DataFrame(
+        insights,
+        columns=["order_date", "insight", "confidence"]
+    ).to_sql(
         "executive_insights",
         engine,
         if_exists="replace",
         index=False
     )
 
-    print("executive_insights table updated")
+    print("executive_insights table rebuilt correctly")
