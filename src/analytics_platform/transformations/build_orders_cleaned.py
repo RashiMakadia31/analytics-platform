@@ -1,12 +1,14 @@
+from pathlib import Path
 import pandas as pd
 from db.connection import engine
 
-RAW = "data/raw/olist/"
+ROOT_DIR = Path(__file__).resolve().parents[3]
+RAW_DIR = ROOT_DIR / "data" / "raw" / "olist"
 
 def build_orders_cleaned():
-    orders = pd.read_csv(RAW + "olist_orders_dataset.csv")
-    items = pd.read_csv(RAW + "olist_order_items_dataset.csv")
-    customers = pd.read_csv(RAW + "olist_customers_dataset.csv")
+    orders = pd.read_csv(RAW_DIR / "olist_orders_dataset.csv")
+    items = pd.read_csv(RAW_DIR / "olist_order_items_dataset.csv")
+    customers = pd.read_csv(RAW_DIR / "olist_customers_dataset.csv")
 
     orders = orders[["order_id", "customer_id", "order_purchase_timestamp"]]
     orders.rename(columns={"order_purchase_timestamp": "order_date"}, inplace=True)

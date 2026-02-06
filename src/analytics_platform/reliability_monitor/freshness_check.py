@@ -2,19 +2,21 @@ from datetime import date
 import pandas as pd
 
 def check_freshness(df, date_col="order_date", max_days_delay=2):
-    # Explicitly convert to datetime
-    df[date_col] = pd.to_datetime(df[date_col], errors="coerce").dt.date
+    # Convert to datetime64 and ignore invalids
+    dates = pd.to_datetime(df[date_col], errors="coerce")
+    dates = dates.dropna()
 
-    latest_date = df[date_col].max()
-    today = date.today()
-
-    if latest_date is None:
+    if dates.empty:
         return {
             "latest_date": None,
             "delay_days": None,
             "status": "FAIL",
             "reason": "No valid dates found"
         }
+
+    latest_ts = dates.max()
+    latest_date = latest_ts.date()
+    today = date.today()
 
     delay = (today - latest_date).days
 
